@@ -1,0 +1,51 @@
+---
+title: "Stative Standard Scores"
+output: github_document
+---
+
+---
+title: Subjunctive LF Frequency
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, load-packages}
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+library(dbplyr)
+library(lme4)
+library(tidyselect)
+library(broom)
+```
+
+```{r, load-data}
+Regular_Items = read_csv("Regular Verbs.csv")
+Irregular_Items = read_csv("Irregular Verbs.csv")
+```
+
+```{r, standardized-matrix}
+Standardized_Regular_Items = Regular_Items %>%
+  mutate(StdFreq = (Tokens - mean(Tokens)) / sd(Tokens))
+
+kable(Standardized_Regular_Items[1:3], caption = "**Table 1.** Regular stative items, lexical frequencies of the 3PS indicative present form from Davies (2006), and their standard scores.")
+```
+
+```{r, standardized-subordinate}
+Standardized_Irregular_Items = Irregular_Items %>%
+  mutate(StdFreq = (Tokens - mean(Tokens)) / sd(Tokens))
+
+kable(Standardized_Irregular_Items[1:3], caption = "**Table 2.** Subordinate items, lexical frequencies of the 3PS indicative present form from Davies (2006), and their standard scores.")
+```
+
+```{r, standardized-total}
+Combined_Frequency = bind_rows(Regular_Items, Irregular_Items)
+
+Combined_Standardized_Frequency = Combined_Frequency %>%
+  mutate(StdFreq = (Tokens - mean(Tokens)) / sd(Tokens))
+
+kable(Combined_Standardized_Frequency[1:3], caption = "**Table 3.** All subjunctive lexical items reported with the lexical frequencies of the 3PS indicative present form from Davies (2006), and their standard scores.")
+```

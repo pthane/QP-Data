@@ -1,0 +1,29 @@
+﻿Variable type,Variable name,Code
+Participant,Participant ID,Participant_ID
+Participant,Gender,Gender
+Participant,Experimental group,ExpGroup
+Participant,Heritage type,HerGroup
+Participant,Age at time of study,Age
+Participant,Age of acquisition of English,AoA_SPA
+Participant,Age of acquisition of English,AoA_ENG
+Participant,Profession,Prof
+Participant,Sequence in study,Seq_Part
+Participant,Length of residence overseas,LOR_Abroad
+Proficiency,DELE proficiency score (50 point range),DELE
+Proficiency,Self-rated proficiency in Spanish (sum of 4x 10-point Likert scale; maximum value 40),SelfProf
+Education,Years of native speaker courses,HSStudyDur
+Education,Years of L2 courses,L2StudyDur
+Language Dominance,Self-rated dominance along 10-point Likert scale,SelfDom
+Language Dominance,Frequency of activation of Spanish for production (sum of 5x 5-point Likert scales; maximum value 25),FofA_Prod
+Language Dominance,Frequency of activation of Spanish for comprehension (sum of 5x 5-point Likert scales; maximum value 25),FofA_Comp
+Data,Test battery,Battery
+Data,Item number,Item
+Data,Order of item in test battery,Seq_Item
+Data,Matrix verb,MatrixVerb
+Data,Subordinate verb,SubVerb
+Data,Condition,Condition
+Data,"Grammatical property (i.e. aspect, subjunctive)",Property
+Data,Accuracy score,Average
+Data,Lexical frequency of matrix verb (subjunctive and aspect),LF_Matrix
+Data,Lexical frequency of subordinate verb (subjunctive only),LF_Sub
+Data,Volition score (subjunctive only),VolScore

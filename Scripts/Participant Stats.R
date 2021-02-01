@@ -6,8 +6,8 @@ library(emmeans)
 
 # Preparation of data
 ## Load database
-Heritage_Participant_Data = read_csv("./CSV Files/Heritage/CEPT Subjunctive Standardized Heritage Data.csv")
-L2_Participant_Data = read_csv("./CSV Files/L2 Learners/CEPT Subjunctive Standardized L2 Data.csv")
+Heritage_Participant_Data = read_csv("./CSV Files/Heritage/EPT Subjunctive Standardized Heritage Data.csv")
+L2_Participant_Data = read_csv("./CSV Files/L2 Learners/EPT Subjunctive Standardized L2 Data.csv")
 
 ## Bind HS/L2 tables for analysis
 Participant_Data = rbind(Heritage_Participant_Data, L2_Participant_Data)

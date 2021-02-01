@@ -1,48 +1,149 @@
 # Run packages
 library(tidyverse)
+library(effects)
+library(ggeffects)
 library(lme4)
 library(lmerTest)
-library(glmmTMB)
-library(ggeffects)
-library(emmeans)
-library(effects)
-library(sjmisc)
 library(sjPlot)
 
-#Preparation of data
+options(scipen = 999)
+
+# Preparation of data
 ## Load database
-CEPT_Aspect_Data = read_csv("./CSV Files/Heritage/CEPT Preterit Standardized Heritage Data.csv")
+EPT_Aspect_Data = read_csv("./CSV Files/Heritage/EPT Preterit Standardized Heritage Data.csv")
 FCT_Aspect_Data = read_csv("./CSV Files/Heritage/FCT Preterit Standardized Heritage Data.csv")
 Composite_Aspect_Data = read_csv("./CSV Files/Heritage/Composite Preterit Standardized Heritage Data.csv")
-
+EPT_Mood_Data = read_csv("./CSV Files/Heritage/EPT Subjunctive Standardized Heritage Data.csv")
+FCT_Mood_Data = read_csv("./CSV Files/Heritage/FCT Subjunctive Standardized Heritage Data.csv")
+Composite_Mood_Data = read_csv("./CSV Files/Heritage/Composite Subjunctive Standardized Heritage Data.csv")
 
 # Aspect GLMMs
 ## Aspect production
-Aspect_Production = lmer(
-  Average ~ FofA_Std + LF_Std + TF_Main + DELE_Std + FofA_Std:LF_Std + FofA_Std:TF_Main + DELE_Std:LF_Std:TF_Main + FofA_Std:LF_Std:TF_Main +
+Aspect_Production_Lemma = lmer(
+  Average ~ FofA_Std + Token_Lemma_Std + Type_Main + DELE_Std + Token_Lemma_Std:Type_Main + FofA_Std:Token_Lemma_Std + FofA_Std:Type_Main + DELE_Std:Token_Lemma_Std:Type_Main + FofA_Std:Token_Lemma_Std:Type_Main +
     (1 | Participant) + (1 | Item),
-  data = CEPT_Aspect_Data,
+  data = EPT_Aspect_Data,
   control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
 
-summary(Aspect_Production)
+Aspect_Production_Differential = lmer(
+  Average ~ FofA_Std + Token_Differential_Std + Type_Main + DELE_Std + Token_Differential_Std:Type_Main + FofA_Std:Token_Differential_Std + FofA_Std:Type_Main + DELE_Std:Token_Differential_Std:Type_Main + FofA_Std:Token_Differential_Std:Type_Main +
+    (1 | Participant) + (1 | Item),
+  data = EPT_Aspect_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+Aspect_Production_Preterit = lmer(
+  Average ~ FofA_Std + Token_Preterit_Std + Type_Main + DELE_Std + Token_Pret_Std:Type_Main + FofA_Std:Token_Pret_Std + FofA_Std:Type_Main + DELE_Std:Token_Pret_Std:Type_Main + FofA_Std:Token_Pret_Std:Type_Main +
+    (1 | Participant) + (1 | Item),
+  data = EPT_Aspect_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Aspect_Production_Lemma)
+summary(Aspect_Production_Differential)
+summary(Aspect_Production_Preterit)
 
 ## Aspect comprehension
-Aspect_Comprehension = lmer(
-  Average ~ FofA_Std + LF_Std + TF_Main + DELE_Std + FofA_Std:LF_Std + FofA_Std:TF_Main + DELE_Std:LF_Std:TF_Main + FofA_Std:LF_Std:TF_Main +
+Aspect_Comprehension_Lemma = lmer(
+  Average ~ FofA_Std + Token_Lemma_Std + Type_Main + DELE_Std + Token_Lemma_Std:Type_Main + FofA_Std:Token_Lemma_Std + FofA_Std:Type_Main + DELE_Std:Token_Lemma_Std:Type_Main + FofA_Std:Token_Lemma_Std:Type_Main +
     (1 | Participant) + (1 | Item),
-  data = CEPT_Aspect_Data,
+  data = FCT_Aspect_Data,
   control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
 
-summary(Aspect_Comprehension)
-print(Aspect_Comprehension, correlation = TRUE)
+Aspect_Comprehension_Differential = lmer(
+  Average ~ FofA_Std + Token_Differential_Std + Type_Main + DELE_Std + Token_Differential_Std:Type_Main + FofA_Std:Token_Differential_Std + FofA_Std:Type_Main + DELE_Std:Token_Differential_Std:Type_Main + FofA_Std:Token_Differential_Std:Type_Main +
+    (1 | Participant) + (1 | Item),
+  data = FCT_Aspect_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+Aspect_Comprehension_Preterit = lmer(
+  Average ~ FofA_Std + Token_Preteritl_Std + Type_Main + DELE_Std + Token_Pret_Std:Type_Main + FofA_Std:Token_Pret_Std + FofA_Std:Type_Main + DELE_Std:Token_Pret_Std:Type_Main + FofA_Std:Token_Pret_Std:Type_Main +
+    (1 | Participant) + (1 | Item),
+  data = FCT_Aspect_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Aspect_Comprehension_Lemma)
+summary(Aspect_Comprehension_Differential)
+summary(Aspect_Comprehension_Preterit)
 
 
 ## Aspect composite
-Aspect_Composite = lmer(
-  Average ~ FofA_Std + LF_Std + TF_Main + DELE_Std + FofA_Std:LF_Std + FofA_Std:TF_Main + DELE_Std:LF_Std:TF_Main + FofA_Std:LF_Std:TF_Main +
+Aspect_Composite_Lemma = lmer(
+  Average ~ FofA_Std + Token_Lemma_Std + Type_Main + DELE_Std + Token_Lemma_Std:Type_Main + FofA_Std:Token_Lemma_Std + FofA_Std:Type_Main + DELE_Std:Token_Lemma_Std:Type_Main + FofA_Std:Token_Lemma_Std:Type_Main +
     (1 | Participant) + (1 | Item),
-  data = CEPT_Aspect_Data,
+  data = Composite_Aspect_Data,
   control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
 
-summary(Aspect_Composite)
-print(Aspect_Composite, correlation = TRUE)
+Aspect_Composite_Differential = lmer(
+  Average ~ FofA_Std + Token_Differential_Std + Type_Main + DELE_Std + Token_Differential_Std:Type_Main + FofA_Std:Token_Differential_Std + FofA_Std:Type_Main + DELE_Std:Token_Differential_Std:Type_Main + FofA_Std:Token_Differential_Std:Type_Main +
+    (1 | Participant) + (1 | Item),
+  data = Composite_Aspect_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+Aspect_Composite_Preterit = lmer(
+  Average ~ FofA_Std + Token_Preterit_Std + Type_Main + DELE_Std + Token_Pret_Std:Type_Main + FofA_Std:Token_Pret_Std + FofA_Std:Type_Main + DELE_Std:Token_Pret_Std:Type_Main + FofA_Std:Token_Pret_Std:Type_Main +
+    (1 | Participant) + (1 | Item),
+  data = Composite_Aspect_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Aspect_Composite_Lemma)
+summary(Aspect_Composite_Differential)
+summary(Aspect_Composite_Preterit)
+
+
+# Mood GLMMs
+## Mood production
+Mood_Production_Matrix = lmer(
+  Average ~ FofA_Std + Token_Main_Lemma_Std + DELE_Std + FofA_Std + Token_Main_Lemma_Std + DELE_Std:Token_Main_Lemma_Std + FofA_Std:Token_Main_Lemma_Std +
+    (1 | Participant) + (1 | Item),
+  data = EPT_Mood_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Mood_Production_Matrix)
+
+## Mood comprehension
+Mood_Comprehension_Matrix = lmer(
+  Average ~ FofA_Std + Token_Main_Lemma_Std + DELE_Std + FofA_Std + Token_Main_Lemma_Std + DELE_Std:Token_Main_Lemma_Std + FofA_Std:Token_Main_Lemma_Std +
+    (1 | Participant) + (1 | Item),
+  data = FCT_Mood_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Mood_Comprehension_Matrix)
+
+
+## Mood composite
+Mood_Composite_Matrix = lmer(
+  Average ~ FofA_Std + Token_Main_Lemma_Std + DELE_Std + FofA_Std + Token_Main_Lemma_Std + DELE_Std:Token_Main_Lemma_Std + FofA_Std:Token_Main_Lemma_Std +
+    (1 | Participant) + (1 | Item),
+  data = Composite_Mood_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Mood_Composite_Matrix)
+
+
+# Mood GLMMs for subordinate clause
+## Mood production
+Mood_Production_Subordinate = lmer(
+  Average ~ FofA_Std + Token_Sub_Std + DELE_Std + FofA_Std + Token_Sub_Std + DELE_Std:Token_Sub_Std + FofA_Std:Token_Sub_Std +
+    (1 | Participant) + (1 | Item),
+  data = EPT_Mood_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Mood_Production_Subordinate)
+
+## Mood comprehension
+Mood_Comprehension_Subordinate = lmer(
+  Average ~ FofA_Std + Token_Sub_Std + DELE_Std + FofA_Std + Token_Sub_Std + DELE_Std:Token_Sub_Std + FofA_Std:Token_Sub_Std +
+    (1 | Participant) + (1 | Item),
+  data = FCT_Mood_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Mood_Comprehension_Subordinate)
+
+
+## Mood composite
+Mood_Composite_Subordinate = lmer(
+  Average ~ FofA_Std + Token_Sub_Std + DELE_Std + FofA_Std + Token_Sub_Std + DELE_Std:Token_Sub_Std + FofA_Std:Token_Sub_Std +
+    (1 | Participant) + (1 | Item),
+  data = Composite_Mood_Data,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
+
+summary(Mood_Composite_Subordinate)

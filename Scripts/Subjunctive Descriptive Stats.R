@@ -6,7 +6,7 @@ library(glmmTMB)
 library(emmeans)
 library(kableExtra)
 
-#Preparation of data
+# Preparation of data
 ## Load database
 L2_EPT = read_csv("./CSV Files/L2 Learners/EPT Subjunctive Standardized L2 Data.csv")
 L2_FCT = read_csv("./CSV Files/L2 Learners/FCT Subjunctive Standardized L2 Data.csv")
@@ -42,7 +42,7 @@ Subjunctive_EPT %>%
 
 # Plots by accuracy across condition
 Subjunctive_EPT %>%
-  ggplot(aes(x = Condition, y = Average, color = ExpGroup)) + 
+  ggplot(aes(x = Verb_condition, y = Average, color = ExpGroup)) + 
   facet_grid(. ~ ExpGroup) + 
   geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
   stat_summary(fun = mean,
@@ -51,11 +51,11 @@ Subjunctive_EPT %>%
   scale_color_brewer(palette = "Set1", name = "") +
   theme(legend.position = "none") +
   ylim(c(0,1)) +
-  labs(x = 'Condition', y = 'Proportion of expected responses', caption = '', 
+  labs(x = 'Frequency of matrix verb', y = 'Proportion of expected responses', caption = '', 
        title = 'Descriptive Statistics by Condition, Production Task')
 
 Subjunctive_FCT %>%
-  ggplot(aes(x = Condition, y = Average, color = ExpGroup)) + 
+  ggplot(aes(x = Verb_condition, y = Average, color = ExpGroup)) + 
   facet_grid(. ~ ExpGroup) + 
   geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
   stat_summary(fun = mean,
@@ -64,5 +64,5 @@ Subjunctive_FCT %>%
   scale_color_brewer(palette = "Set1", name = "") +
   theme(legend.position = "none") +
   ylim(c(0,1)) +
-  labs(x = 'Condition', y = 'Proportion of expected responses', caption = '', 
+  labs(x = 'Frequency of matrix verb', y = 'Proportion of expected responses', caption = '', 
        title = 'Descriptive Statistics by Condition, Forced Choice Task')

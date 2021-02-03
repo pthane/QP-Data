@@ -31,6 +31,7 @@ Comparison_FCT = read.csv("../CSV Files/Comparison/FCT Subjunctive Standardized 
 ```{R, merge-datasets}
 Aggregate_EPT = rbind(Comparison_EPT,L2_EPT,Heritage_EPT)
 Aggregate_FCT = rbind(Comparison_EPT,L2_EPT,Heritage_EPT)
+Aggregate_Composite = rbind(Aggregate_EPT, Aggregate_FCT)
 ```
 
 

@@ -19,9 +19,6 @@ FCT_Mood = read_csv("./CSV Files/L2 Learners/FCT Subjunctive Raw L2 Data.csv")
 # Aspect data
 ## Modify preterit production data
 EPT_Aspect_Standardized = EPT_Aspect %>%
-  mutate(Participant = str_extract(Participant_ID, '[0-9]+'))
-
-EPT_Aspect_Standardized = EPT_Aspect_Standardized %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(Token_Differential = Token_Main_Imp - Token_Main_Pret) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
@@ -35,9 +32,6 @@ EPT_Aspect_Standardized = EPT_Aspect_Standardized %>%
 
 ## Modify preterit comprehension data
 FCT_Aspect_Standardized = FCT_Aspect %>%
-  mutate(Participant = str_extract(Participant_ID, '[0-9]+'))
-
-FCT_Aspect_Standardized = FCT_Aspect_Standardized %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(Token_Differential = Token_Main_Imp - Token_Main_Pret) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
@@ -52,9 +46,6 @@ FCT_Aspect_Standardized = FCT_Aspect_Standardized %>%
 # Mood data
 ## Modify subjunctive production data
 EPT_Mood_Standardized = EPT_Mood %>%
-  mutate(Participant = str_extract(Participant_ID, '[0-9]+'))
-
-EPT_Mood_Standardized = EPT_Mood_Standardized %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
          Token_Main_Lemma_Std = (Token_Main_Lemma - mean(Token_Main_Lemma))/sd(Token_Main_Lemma),
@@ -66,9 +57,6 @@ EPT_Mood_Standardized = EPT_Mood_Standardized %>%
 
 ## Modify subjunctive comprehension data
 FCT_Mood_Standardized = FCT_Mood %>%
-  mutate(Participant = str_extract(Participant_ID, '[0-9]+'))
-
-FCT_Mood_Standardized = FCT_Mood_Standardized %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
          Token_Main_Lemma_Std = (Token_Main_Lemma - mean(Token_Main_Lemma))/sd(Token_Main_Lemma),

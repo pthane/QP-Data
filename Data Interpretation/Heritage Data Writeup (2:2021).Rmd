@@ -136,7 +136,7 @@ tab_model(Mood_Production)
 ### Preterit production in EPT
 ```{r, aspect-production-model}
 Aspect_Production = glmer(
-  Average ~ Token_Lemma_Std + FofA_Std + DELE_Std + Type_Main + FofA_Std:Token_Lemma_Std + FofA_Std:Type_Main + FofA_Std:Token_Lemma_Std:Type_Main +
+  Average ~ Token_Lemma_Std + FofA_Std + DELE_Std + Reg_Main + FofA_Std:Token_Lemma_Std + FofA_Std:Reg_Main + FofA_Std:Token_Lemma_Std:Reg_Main +
     (1 | Group_No) + (1 | Item),
   data = Heritage_Preterit_EPT, family = "binomial",
   control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
@@ -148,7 +148,7 @@ tab_model(Aspect_Production)
 ### Preterit production in FCT
 ```{r, aspect-comprehension-model}
 Aspect_Comprehension = glmer(
-  Average ~ Token_Lemma_Std + FofA_Std + DELE_Std + Type_Main + FofA_Std:Token_Lemma_Std + FofA_Std:Type_Main + FofA_Std:Token_Lemma_Std:Type_Main +
+  Average ~ Token_Lemma_Std + FofA_Std + DELE_Std + Reg_Main + FofA_Std:Token_Lemma_Std + FofA_Std:Reg_Main + FofA_Std:Token_Lemma_Std:Reg_Main +
     (1 | Group_No) + (1 | Item),
   data = Heritage_Preterit_FCT, family = "binomial",
   control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
@@ -164,14 +164,15 @@ tab_model(Aspect_Comprehension)
 ```{r, subjunctive-lexical-items}
 Subjunctive_Aggregate %>%
   ggplot(aes(x = MainVerb, y = Average, color = ExpGroup, shape = Task)) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) +
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
+  geom_hline(yintercept = 0.8, color = 'white', size = 2) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", size = 1, 
                position = position_dodge(width = 0.5)) + 
   scale_color_brewer(palette = "Set1", name = "") +
-  ylim(c(0,1)) +
-  labs(x = 'Matrix verb', y = 'Proportion of subjunctive responses', caption = '', 
-       title = 'Average use of subjunctive by matrix item') +
+  scale_y_continuous(breaks = seq (0, 1, 0.2),
+                     limits = c(0, 1)) +
+  labs(x = "Matrix verb", y = "Proportion of subjunctive responses", caption = "", 
+       title = "Average Use of Subjunctive by Matrix Item") +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
@@ -278,14 +279,15 @@ Heritage_FCT_Modified %>%
 ```{r, preterit-lexical-items}
 Preterit_Aggregate %>%
   ggplot(aes(x = MainVerb, y = Average, color = ExpGroup, shape = Task)) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) +
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
+  geom_hline(yintercept = 0.8, color = 'white', size = 2) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", size = 1, 
                position = position_dodge(width = 0.5)) + 
   scale_color_brewer(palette = "Set1", name = "") +
-  ylim(c(0,1)) +
-  labs(x = 'State verb', y = 'Proportion of preterit responses', caption = '', 
-       title = 'Average Use of Preterit by State Verb') +
+  scale_y_continuous(breaks = seq (0, 1, 0.2),
+                     limits = c(0, 1)) +
+  labs(x = "Matrix verb", y = "Proportion of subjunctive responses", caption = "", 
+       title = "Average Use of Subjunctive by Matrix Item") +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
@@ -294,13 +296,15 @@ Preterit_Aggregate %>%
 ## By morphological regularity
 ```{r, preterit-morph-regularity}
 Preterit_Aggregate %>%
-  ggplot(aes(x = Type_Main, y = Average, color = ExpGroup, shape = Task)) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
+  ggplot(aes(x = Reg_Main, y = Average, color = ExpGroup, shape = Task)) + 
+  facet_grid(cols = vars(ExpGroup)) +
+  geom_hline(yintercept = 0.8, color = 'white', size = 2) + 
+  stat_summary(fun.data = mean_se,
                geom = 'pointrange', size = 1, 
                position = position_dodge(width = 0.5)) + 
   scale_color_brewer(palette = "Set1", name = "") +
-  ylim(c(0,1)) +
+  scale_y_continuous(breaks = seq (0, 1, 0.2),
+                     limits = c(0, 1)) +
   labs(x = 'Log-transformed lemma frequency in Davies (2006)', y = 'Proportion of preterit responses', caption = '', 
        title = 'Morphological Regularity, Lexical Frequency, and Preterit Use') +
   theme(plot.title = element_text(hjust = 0.5))

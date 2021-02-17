@@ -7,6 +7,8 @@ library(glmmTMB)
 library(emmeans)
 library(kableExtra)
 
+options(sciphen = 999)
+
 # Preparation of data
 ## Load database
 L2_EPT = read_csv("./CSV Files/L2 Learners/EPT Preterit Standardized L2 Data.csv")
@@ -24,6 +26,14 @@ Preterit_Aggregate = rbind(Preterit_EPT, Preterit_FCT)
 
 
 ## Find participant averages
+Heritage_EPT_Modified = aggregate(Heritage_EPT$Average, list(Heritage_EPT$Participant_ID), FUN = mean)
+Heritage_EPT_Modified = Heritage_EPT_Modified %>% rename(Part_Avg = x)
+Heritage_EPT_Modified = left_join(Heritage_EPT, Heritage_EPT_Modified, by = c("Participant_ID" = "Group.1"))
+
+Heritage_FCT_Modified = aggregate(Heritage_FCT$Average, list(Heritage_FCT$Participant_ID), FUN = mean)
+Heritage_FCT_Modified = Heritage_FCT_Modified %>% rename(Part_Avg = x)
+Heritage_FCT_Modified = left_join(Heritage_FCT, Heritage_FCT_Modified, by = c("Participant_ID" = "Group.1"))
+
 Preterit_EPT_Aggregate = aggregate(Preterit_EPT$Average, list(Preterit_EPT$Participant_ID), FUN = mean)
 Preterit_EPT_Aggregate = Preterit_EPT_Aggregate %>% rename(Part_Avg = x)
 Preterit_EPT_Aggregate = left_join(Preterit_EPT, Preterit_EPT_Aggregate, by = c("Participant_ID" = "Group.1"))
@@ -33,119 +43,46 @@ Preterit_FCT_Aggregate = Preterit_FCT_Aggregate %>% rename(Part_Avg = x)
 Preterit_FCT_Aggregate = left_join(Preterit_FCT, Preterit_FCT_Aggregate, by = c("Participant_ID" = "Group.1"))
 
 
-# Descriptive stats
-## Descriptive stats by experimental group
-Preterit_EPT_Aggregate %>%
-  group_by(ExpGroup) %>%
-  summarize(Average = mean(Average, na.rm = T), SD = sd(Average, na.rm = T))
+# Group-wise models
+Preterit_Task_Group_Effects = lmer(
+  Average ~ ExpGroup + Task + ExpGroup:Task +
+    (1 | Group_No) + (1 | Item),
+  data = Preterit_Aggregate,
+  control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
 
-Preterit_FCT_Aggregate %>%
-  group_by(ExpGroup) %>%
-  summarize(Average = mean(Average, na.rm = T), SD = sd(Average, na.rm = T))
+summary(Preterit_Task_Group_Effects)
 
 
 # Plots
 ## Individual lexical items
-Preterit_EPT_Aggregate %>%
-  ggplot(aes(x = MainVerb, y = Average, color = ExpGroup)) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  ylim(c(0,1)) +
-  labs(x = 'Matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of preterit by matrix item, EPT')
-
-Preterit_FCT_Aggregate %>%
-  ggplot(aes(x = MainVerb, y = Average, color = ExpGroup)) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  ylim(c(0,1)) +
-  labs(x = 'Matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of preterit by matrix item, FCT')
-
 Preterit_Aggregate %>%
   ggplot(aes(x = MainVerb, y = Average, color = ExpGroup, shape = Task)) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
+  geom_hline(yintercept = 0.8, color = 'white', size = 2) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", size = 1, 
                position = position_dodge(width = 0.5)) + 
   scale_color_brewer(palette = "Set1", name = "") +
-  ylim(c(0,1)) +
-  labs(x = 'Matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of preterit by matrix item')
+  scale_y_continuous(breaks = seq (0, 1, 0.2),
+                     limits = c(0, 1)) +
+  labs(x = "Matrix verb", y = "Proportion of subjunctive responses", caption = "", 
+       title = "Average Use of Subjunctive by Matrix Item") +
+  theme(plot.title = element_text(hjust = 0.5))
 
 
-## By accuracy across morphological regularity
-Preterit_EPT_Aggregate %>%
-  ggplot(aes(x = Type_Main, y = Average, color = ExpGroup)) + 
-  facet_grid(. ~ ExpGroup) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  theme(legend.position = "none") +
-  ylim(c(0,1)) +
-  labs(x = 'Regularity of matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of preterit by morphological regularity, EPT')
-
-Preterit_FCT_Aggregate %>%
-  ggplot(aes(x = Type_Main, y = Average, color = ExpGroup)) + 
-  facet_grid(. ~ ExpGroup) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  theme(legend.position = "none") +
-  ylim(c(0,1)) +
-  labs(x = 'Regularity of matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of preterit by morphological regularity, FCT')
-
+## By morphological regularity and frequency
 Preterit_Aggregate %>%
-  ggplot(aes(x = Type_Main, y = Average, color = ExpGroup, shape = Task)) + 
-  facet_grid(. ~ ExpGroup) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
+  ggplot(aes(x = Reg_Main, y = Average, color = ExpGroup, shape = Task)) + 
+  facet_grid(cols = vars(ExpGroup)) +
+  geom_hline(yintercept = 0.8, color = 'white', size = 2) + 
+  stat_summary(fun.data = mean_se,
                geom = 'pointrange', size = 1, 
                position = position_dodge(width = 0.5)) + 
   scale_color_brewer(palette = "Set1", name = "") +
-  ylim(c(0,1)) +
-  labs(x = 'Frequency of matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of preterit by morphological regularity')
-
-
-## By accuracy across condition
-Preterit_EPT_Aggregate %>%
-  ggplot(aes(x = Condition, y = Average, color = ExpGroup)) + 
-  facet_grid(. ~ ExpGroup) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  theme(legend.position = "none") +
-  ylim(c(0,1)) +
-  labs(x = 'Frequency of matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of Preterit, EPT')
-
-Preterit_FCT_Aggregate %>%
-  ggplot(aes(x = Condition, y = Average, color = ExpGroup)) + 
-  facet_grid(. ~ ExpGroup) + 
-  geom_hline(yintercept = 0.5, color = 'white', size = 2) + 
-  stat_summary(fun = mean,
-               geom = 'pointrange', size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  theme(legend.position = "none") +
-  ylim(c(0,1)) +
-  labs(x = 'Frequency of matrix verb', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Average use of Preterit, FCT')
+  scale_y_continuous(breaks = seq (0, 1, 0.2),
+                     limits = c(0, 1)) +
+  labs(x = 'Log-transformed lemma frequency in Davies (2006)', y = 'Proportion of preterit responses', caption = '', 
+       title = 'Morphological Regularity, Lexical Frequency, and Preterit Use') +
+  theme(plot.title = element_text(hjust = 0.5))
 
 
 ## By average accuracy and proficiency
@@ -155,8 +92,9 @@ Preterit_EPT_Aggregate %>%
   geom_smooth(method=lm) +
   xlim(c(25,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Correct responses on DELE proficiency measure', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Use of preterit by proficiency, EPT')
+  labs(x = 'Correct responses on DELE proficiency measure', y = 'Proportion of preterit responses', caption = '', 
+       title = 'Preterit by Proficiency, EAPT') +
+  theme(plot.title = element_text(hjust = 0.5))
 
 Preterit_FCT_Aggregate %>%
   ggplot(aes(x = DELE, y = Part_Avg, color = ExpGroup)) + 
@@ -164,25 +102,28 @@ Preterit_FCT_Aggregate %>%
   geom_smooth(method=lm) +
   xlim(c(25,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Correct responses on DELE proficiency measure', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Use of Preterit by proficiency, FCT')
+  labs(x = 'Correct responses on DELE proficiency measure', y = 'Proportion of preterit responses', caption = '', 
+       title = 'Preterit by Proficiency, ASPT') +
+  theme(plot.title = element_text(hjust = 0.5))
 
 
-## By average accuracy and activation
+## By average accuracy and use
 Preterit_EPT_Aggregate %>%
   ggplot(aes(x = FofA, y = Part_Avg, color = ExpGroup)) + 
   geom_point() +
   geom_smooth(method=lm) +
-  xlim(c(0,50)) +
+  xlim(c(5,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Self-reported frequency of use of Spanish', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Use of preterit by frequency of use, EPT')
+  labs(x = 'Self-reported frequency of use of Spanish', y = 'Proportion of preterit responses',
+       title = 'Preterit by Frequency of Use, EAPT') +
+  theme(plot.title = element_text(hjust = 0.5))
 
 Preterit_FCT_Aggregate %>%
   ggplot(aes(x = FofA, y = Part_Avg, color = ExpGroup)) + 
   geom_point() +
   geom_smooth(method=lm) +
-  xlim(c(0,50)) +
+  xlim(c(5,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Self-reported frequency of use of Spanish', y = 'Proportion of Preterit responses', caption = '', 
-       title = 'Use of preterit by frequency of use, FCT')
+  labs(x = 'Self-reported frequency of use of Spanish', y = 'Proportion of preterit responses',
+       title = 'Preterit by Frequency of Use, ASPT') +
+  theme(plot.title = element_text(hjust = 0.5))

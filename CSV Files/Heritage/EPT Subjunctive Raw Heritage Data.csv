@@ -1,4 +1,4 @@
-﻿Participant_ID,Seq_part,Gender,ExpGroup,HerGroup,Group_No,Age,AoA_SPA,AoA_ENG,LOR,SelfProf,SelfDom,DELE,FofA_Prod,FofA_Comp,Battery,Item,Seq_Item,Average,MainVerb,Token_Main_Lemma,Token_Main_Pret,Token_Main_Imp,Type_Main,Syntax_Main,SubVerb,Token_Sub,Morpheme,Property,Task,Condition,Verb_Condition
+﻿Participant_ID,Seq_part,Gender,ExpGroup,HerGroup,Group_No,Age,AoA_SPA,AoA_ENG,LOR,SelfProf,SelfDom,DELE,FofA_Prod,FofA_Comp,Battery,Item,Seq_Item,Average,MainVerb,Token_Main_Lemma,Token_Main_Pret,Token_Main_Imp,Reg_Main,Syntax_Main,SubVerb,Token_Sub,Morpheme,Property,Task,Condition,Verb_Condition
 HSP01,6,Male,Heritage,Simultaneous,01,31,0,0,0.25,34,4,45,10,13,B,20,3,1,ordenar,65158,,,Regular,Canonical,bailar,29935,Mood,Subjunctive,EMPT,D,[–F/–F]
 HSP01,6,Male,Heritage,Simultaneous,01,31,0,0,0.25,34,4,45,10,13,B,10,5,1,esperar,1409514,,,Regular,Canonical,atar,15876,Mood,Subjunctive,EMPT,B,[+F/–F]
 HSP01,6,Male,Heritage,Simultaneous,01,31,0,0,0.25,34,4,45,10,13,B,15,8,1,conseguir,129144,,,Irregular,Canonical,enviar,766523,Mood,Subjunctive,EMPT,C,[–F/+F]

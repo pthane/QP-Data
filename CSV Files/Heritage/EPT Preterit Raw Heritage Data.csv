@@ -1,4 +1,4 @@
-﻿Participant_ID,Seq_part,Gender,ExpGroup,HerGroup,Group_No,Age,AoA_SPA,AoA_ENG,LOR,SelfProf,SelfDom,DELE,FofA_Prod,FofA_Comp,Battery,Item,Seq_Item,Average,MainVerb,Token_Main_Lemma,Token_Main_Pret,Token_Main_Imp,Type_Main,Syntax_Main,SubVerb,Token_Sub,Morpheme,Property,Task,Condition,Verb_Condition
+﻿Participant_ID,Seq_part,Gender,ExpGroup,HerGroup,Group_No,Age,AoA_SPA,AoA_ENG,LOR,SelfProf,SelfDom,DELE,FofA_Prod,FofA_Comp,Battery,Item,Seq_Item,Average,MainVerb,Token_Main_Lemma,Token_Main_Pret,Token_Main_Imp,Reg_Main,Syntax_Main,SubVerb,Token_Sub,Morpheme,Property,Task,Condition,Verb_Condition
 HSP01,6,Male,Heritage,Simultaneous,01,31,0,0,0.25,34,4,45,10,13,B,40,2,1,haber,7679109,1017563,4153642,Irregular,Canonical,,,Aspect,Preterit,EAPT,H,Irregular stative with entre
 HSP01,6,Male,Heritage,Simultaneous,01,31,0,0,0.25,34,4,45,10,13,B,30,4,1,creer,537246,33274,70392,Irregular,Canonical,,,Aspect,Preterit,EAPT,F,Irregular stative with durante
 HSP01,6,Male,Heritage,Simultaneous,01,31,0,0,0.25,34,4,45,10,13,B,35,7,1,doler,69627,11678,6450,Regular,DativeExp,,,Aspect,Preterit,EAPT,G,Regular stative with entre

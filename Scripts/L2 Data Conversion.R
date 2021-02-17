@@ -1,6 +1,3 @@
-# QP Statistics prepared by Jennifer Markovits
-## Data represented for subjunctive production data only
-
 # Run packages
 library(tidyverse)
 library(dplyr)
@@ -22,12 +19,13 @@ EPT_Aspect_Standardized = EPT_Aspect %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(Token_Differential = Token_Main_Imp - Token_Main_Pret) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
+         AoA_ENG_Std = (AoA_ENG - mean(AoA_ENG))/sd(AoA_ENG),
+         DELE_Std = (DELE - mean(DELE))/sd(DELE),
          Token_Lemma_Std = (Token_Main_Lemma - mean(Token_Main_Lemma))/sd(Token_Main_Lemma),
          Token_Differential_Std = (Token_Differential - mean(Token_Differential))/sd(Token_Differential),
          Token_Pret_Std = (Token_Main_Pret - mean(Token_Main_Pret))/sd(Token_Main_Pret),
-         Type_Std = (Type_Main - mean(Type_Main))/sd(Type_Main),
-         LOR_Std = (LOR - mean(LOR))/sd(LOR),
-         DELE_Std = (DELE - mean(DELE))/sd(DELE))
+         LOR_Std = (LOR - mean(LOR))/sd(LOR))
+
 
 
 ## Modify preterit comprehension data
@@ -35,12 +33,12 @@ FCT_Aspect_Standardized = FCT_Aspect %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(Token_Differential = Token_Main_Imp - Token_Main_Pret) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
+         AoA_ENG_Std = (AoA_ENG - mean(AoA_ENG))/sd(AoA_ENG),
+         DELE_Std = (DELE - mean(DELE))/sd(DELE),
          Token_Lemma_Std = (Token_Main_Lemma - mean(Token_Main_Lemma))/sd(Token_Main_Lemma),
          Token_Differential_Std = (Token_Differential - mean(Token_Differential))/sd(Token_Differential),
          Token_Pret_Std = (Token_Main_Pret - mean(Token_Main_Pret))/sd(Token_Main_Pret),
-         Type_Std = (Type_Main - mean(Type_Main))/sd(Type_Main),
-         LOR_Std = (LOR - mean(LOR))/sd(LOR),
-         DELE_Std = (DELE - mean(DELE))/sd(DELE))
+         LOR_Std = (LOR - mean(LOR))/sd(LOR))
 
 
 # Mood data
@@ -48,22 +46,24 @@ FCT_Aspect_Standardized = FCT_Aspect %>%
 EPT_Mood_Standardized = EPT_Mood %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
+         AoA_ENG_Std = (AoA_ENG - mean(AoA_ENG))/sd(AoA_ENG),
+         DELE_Std = (DELE - mean(DELE))/sd(DELE),
          Token_Main_Lemma_Std = (Token_Main_Lemma - mean(Token_Main_Lemma))/sd(Token_Main_Lemma),
          Token_Sub_Std = (Token_Sub - mean(Token_Sub))/sd(Token_Sub),
          Token_Pret_Std = (Token_Main_Pret - mean(Token_Main_Pret))/sd(Token_Main_Pret),
-         LOR_Std = (LOR - mean(LOR))/sd(LOR),
-         DELE_Std = (DELE - mean(DELE))/sd(DELE))
+         LOR_Std = (LOR - mean(LOR))/sd(LOR))
 
 
 ## Modify subjunctive comprehension data
 FCT_Mood_Standardized = FCT_Mood %>%
   mutate(FofA = FofA_Prod + FofA_Comp) %>%
   mutate(FofA_Std = (FofA - mean(FofA))/sd(FofA),
+         AoA_ENG_Std = (AoA_ENG - mean(AoA_ENG))/sd(AoA_ENG),
+         DELE_Std = (DELE - mean(DELE))/sd(DELE),
          Token_Main_Lemma_Std = (Token_Main_Lemma - mean(Token_Main_Lemma))/sd(Token_Main_Lemma),
          Token_Sub_Std = (Token_Sub - mean(Token_Sub))/sd(Token_Sub),
          Token_Pret_Std = (Token_Main_Pret - mean(Token_Main_Pret))/sd(Token_Main_Pret),
-         LOR_Std = (LOR - mean(LOR))/sd(LOR),
-         DELE_Std = (DELE - mean(DELE))/sd(DELE))
+         LOR_Std = (LOR - mean(LOR))/sd(LOR))
 
 
 # Create composite data for subjunctive

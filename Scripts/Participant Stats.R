@@ -5,12 +5,20 @@ library(glmmTMB)
 library(emmeans)
 
 # Preparation of data
-## Load database
 Heritage_Participant_Data = read_csv("./CSV Files/Heritage/EPT Subjunctive Standardized Heritage Data.csv")
 L2_Participant_Data = read_csv("./CSV Files/L2 Learners/EPT Subjunctive Standardized L2 Data.csv")
+Comparison_Participant_Data = read_csv("./CSV Files/Comparison/EPT Subjunctive Standardized Comparison Data.csv")
 
-## Bind HS/L2 tables for analysis
-Participant_Data = rbind(Heritage_Participant_Data, L2_Participant_Data)
+Participant_Data = rbind(Heritage_Participant_Data, L2_Participant_Data, Comparison_Participant_Data)
+
+
+# Correlation measure for HS use/proficiency
+Heritage_Participant_Data %>% 
+  ggplot(aes(x = DELE, y = FofA, color = AoA_ENG)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  labs(x = 'Proficiency score (DELE)', y = 'Self-reported frequency of use', caption = '', 
+       title = 'Proficiency and Patterns of Language Use')
 
 
 # Participant statistics

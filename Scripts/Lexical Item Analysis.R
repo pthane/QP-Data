@@ -58,8 +58,8 @@ write_csv(Lexical_Frequencies, "./CSV Files/Lexical Item Analysis/Standardized L
 
 ## Plot
 Lexical_Frequencies %>% 
-  ggplot(., aes(x = mean_f_std, y = log(Lemma))) + 
-    geom_point() + 
+  ggplot(., aes(x = mean_f_std, y = log(Lemma), label = Item)) + 
+    geom_text() + 
     geom_smooth(method = lm) +
     labs(x = "Average participant self-rating of lexical items", y = "Log-transformed lemma frequency", title = "Correlation of HS Lexical Use and Davies (2006) Lemma Frequency") +
     theme(plot.title = element_text(hjust = 0.5))

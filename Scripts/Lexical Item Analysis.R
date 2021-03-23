@@ -7,28 +7,28 @@ library(lme4)
 library(lmerTest)
 library(sjPlot)
 
-options(scipen = 99)
+options(scipen = 999)
 
 # Preparation of data
 Lexical_Item_Report = read.csv("./CSV Files/Lexical Item Analysis/Self-Reported Use Raw Data.csv")
 
-Lexical_Frequencies = Lexical_Item_Report %>%
+Lexical_Frequencies = Lexical_Item_Report %>% 
   pivot_longer(cols = Participant, names_to = "Item", values_to = "Rating") %>% 
   group_by(Item) %>% 
   summarize(., Mean_Frequency = mean(Rating)) %>% 
   left_join(.,
     bind_rows(
-      read_csv("./CSV Files/Heritage/EPT Preterit Standardized Heritage Data.csv") %>%
+      read_csv("./CSV Files/Heritage/Heritage EPT Preterit Data.csv") %>%
         select(MainVerb, Token_Main_Lemma) %>%
         distinct(MainVerb, Token_Main_Lemma) %>% 
         mutate(type = "Main") %>% 
         rename(Item = MainVerb, Lemma = Token_Main_Lemma),
-      read_csv("./CSV Files/Heritage/FCT Subjunctive Standardized Heritage Data.csv") %>%
+      read_csv("./CSV Files/Heritage/Heritage EPT Subjunctive Data.csv") %>%
         select(MainVerb, Token_Main_Lemma) %>%
         distinct(MainVerb, Token_Main_Lemma) %>% 
         mutate(type = "Main") %>% 
         rename(Item = MainVerb, Lemma = Token_Main_Lemma), 
-      read_csv("./CSV Files/Heritage/FCT Subjunctive Standardized Heritage Data.csv") %>%
+      read_csv("./CSV Files/Heritage/Heritage EPT Preterit Data.csv") %>%
         select(SubVerb, Token_Sub) %>%
         distinct(SubVerb, Token_Sub) %>%
         mutate(type = "Sub") %>% 

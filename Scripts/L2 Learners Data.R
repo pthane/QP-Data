@@ -10,26 +10,28 @@ options(scipen = 999)
 
 # Preparation of data
 ## Load database
-EPT_Aspect_Data = read_csv("./CSV Files/L2 Learners/L2 Learners EPT Preterit Data.csv")
+EPT_Aspect_Data = read_csv("./CSV Files/L2 Learners/L2 Learners EPT Preterit Data.csv") 
 FCT_Aspect_Data = read_csv("./CSV Files/L2 Learners/L2 Learners FCT Preterit Data.csv")
 EPT_Mood_Data = read_csv("./CSV Files/L2 Learners/L2 Learners EPT Subjunctive Data.csv")
 FCT_Mood_Data = read_csv("./CSV Files/L2 Learners/L2 Learners FCT Subjunctive Data.csv")
 
 
 ## Create Combined Datasets
-Aspect_Composite = rbind(EPT_Aspect_Data, FCT_Aspect_Data)
+Aspect_Composite = rbind(EPT_Aspect_Data, FCT_Aspect_Data) 
 Mood_Composite = rbind(EPT_Mood_Data, FCT_Mood_Data)
 
 
 # Aspect GLMMs
 ## Aspect production
 Aspect_Production = glmer(
-  ExpForm ~ Token_Main_Std * Reg_Main * FofA_Std + AoA_ENG_Std +
-    (1 + Token_Main_Std | Group_No) + (1 + Token_Main_Std | Item),
+  ExpForm ~ Token_Main_Std * Reg_Main * FofA_Std +
+    (1 | Participant_ID) + 
+    (1 | Item),
   data = EPT_Aspect_Data, family = "binomial",
   control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun=3e5)))
 
 summary(Aspect_Production)
+
 
 
 ## Aspect comprehension

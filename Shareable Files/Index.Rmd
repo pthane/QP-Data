@@ -1,6 +1,6 @@
 ---
 title: "Efectos de frecuencia y el aspecto morfológico en los hablantes de herencia del español: exploraciones preliminares"
-subtitle: "Brown Bag Presentation"
+subtitle: "Brown Bag Lunch Presentation"
 author: "Patrick Thane"
 institute: "Rutgers University<br/>Department of Spanish and Portuguese"
 date: "24-marzo, 2021"
@@ -16,6 +16,11 @@ output:
       ratio: "16:9"
 
 ---
+```{css, echo = FALSE}
+.huge-code {font-size: 200% !important}
+.tiny-code {font-size: 50% !important}
+```
+
 ```{r setup, echo = FALSE, include = FALSE, warning = FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 options(scipen = 999)
@@ -65,9 +70,9 @@ Preterit_FCT_Aggregate <- left_join(Preterit_FCT, Preterit_FCT_Aggregate, by = c
 Heritage_Composite <- rbind(Heritage_Preterit_EPT, Heritage_Preterit_FCT)
 ```
 
-# Aspecto gramatical
+# Aspecto morfológico
 
-* El **.RUred[aspecto gramatical]** se refiere a *cómo* un evento avanza por un tiempo
+* El **.RUred[aspecto morfológico]** se refiere a *cómo* un evento avanza por un tiempo
 
 
 --
@@ -79,10 +84,13 @@ Heritage_Composite <- rbind(Heritage_Preterit_EPT, Heritage_Preterit_FCT)
 --
 * El inglés no tiene sufijos de aspecto (-ed)
 
-
 ---
-# Aspecto léxico (Vendler, 1967)
+# Aspecto léxico
 
+- Lo que el significado implica sobre el movimiento por el tiempo (Vendler, 1967)
+
+
+--
 - Categorías **.RUred[télicas]**: *realizaciones* y *logros*; tienen puntos de terminación inherentes:
   + I listened to a song *.grey[(until the song ended).]*
   + I met Patrick *.grey[(at today's presentation).]*
@@ -93,11 +101,6 @@ Heritage_Composite <- rbind(Heritage_Preterit_EPT, Heritage_Preterit_FCT)
   + I listened to music  *.grey[(until Tuesday)].*
   + I knew Patrick  *.grey[(at today's presentation)].*
 
-
---
-```{r, load-lex-aspect-diagram}
-knitr::include_graphics("./Diagrams/Lexical Aspect (Spanish).png")
-```
 
 ---
 # Hipótesis de aspecto léxico
@@ -125,10 +128,6 @@ knitr::include_graphics("./Diagrams/Lexical Aspect (Spanish).png")
 - Los estados con morfología pretérita es la asociación más difícil de adquirir (e.g., Montrul, 2002, 2009)
 
 
---
-- No hemos identificado cómo un hablante usa el pretérito con algunos estados, pero no otros
-
-
 ---
 # Teorías de las lenguas de herencia
 
@@ -150,13 +149,12 @@ knitr::include_graphics("./Diagrams/Lexical Aspect (Spanish).png")
   + **.RUred[Proceso]** de adquisición
 
 --
-  + Cantidades de uso de la lengua de herencia afectan la *reestructuración*
+  + Cantidades de uso de la lengua de herencia afectan la *reestructuración* (Lardiere, 2008)
+
 
 --
   + La producción afectada antes de la comprensión
 
---
-  + *Reensamblaje* de rasgos lingüísticos (e.g., Lardiere, 2008): viv.RUred[í] → cre.RUred[í], com.RUred[í], pero no hab.grey[í]
 
 --
   + La **.RUred[frecuencia léxica]** afecta el uso de la morfología flexiva
@@ -237,18 +235,6 @@ knitr::include_graphics("./Diagrams/Lexical Aspect (Spanish).png")
   + Tarea de producción solicitada, 50 estímulos
   + Tarea de elección forzada, 50 estímulos
 
----
-# Tareas experimentales
-
-* **.RURed[Tarea de producción]**: completación oral de oraciones con el infinitivo proyectada en la pantalla
-
-* **.RURed[Tarea receptiva]**: selección binaria del pretérito o imperfecto
-
-
---
-```{r, task-structure-diagram}
-knitr::include_graphics("./Diagrams/Task Structure (Spanish).png")
-```
 
 ---
 # Ítems verbales
@@ -267,6 +253,20 @@ States_List <- read.csv("../CSV Files/Lexical Item Analysis/List of State Verbs.
 ```{r, verb-kable}
 kable(States_List[1:4])
 ```
+
+---
+# Tareas experimentales
+
+* **.RURed[Tarea de producción]**: completación oral de oraciones con el infinitivo proyectada en la pantalla
+
+* **.RURed[Tarea receptiva]**: selección binaria del pretérito o imperfecto
+
+
+--
+```{r, task-structure-diagram}
+knitr::include_graphics("./Diagrams/Task Structure (Spanish).png")
+```
+
 
 ---
 # Modelos estadísticos
@@ -298,54 +298,7 @@ kable(States_List[1:4])
   + Interacciones entre frecuencia léxica, regularidad morfológica, y frecuencia de uso
 
 ---
-# Uso del pretérito por verbo
-```{r, preterit-by-lexical-item, fig.retina = 2}
-Preterit_by_Lexical_Item <- Preterit_Aggregate %>%
-  ggplot(aes(x = MainVerb, y = ExpForm, color = Grupo, shape = Tarea)) + 
-  geom_hline(yintercept = 0.8, color = "white", size = 2) +
-  stat_summary(fun.data = mean_se,
-               geom = "pointrange", size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  scale_y_continuous(breaks = seq (0, 1, 0.2),
-                     limits = c(0, 1)) +
-  scale_x_discrete(labels = c("estar", "tener", "haber", "vivir", "gustar", "creer", "faltar", "amar", "doler", "excluir")) +
-  labs(x = "Verbo de estado", y = "Proporción de uso del pretérito", 
-       title = "Promedio de uso del pretérito por verbo de estado") +
-  theme(axis.text = element_text(size = 16),
-        axis.title = element_text(size = 18, face = "bold"),
-        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
-```
-
-```{r, publish-pret-LI-graph, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
-(Preterit_by_Lexical_Item)
-```
-
----
-# Efectos de regularidad morfológica
-```{r, preterit-morph-regularity}
-Preterit_by_Morph_Regularity <- Preterit_Aggregate %>%
-  ggplot(aes(x = Reg_Main, y = ExpForm, color = Grupo, shape = Tarea)) + 
-  facet_grid(cols = vars(Grupo)) +
-  geom_hline(yintercept = 0.8, color = "white", size = 2) + 
-  stat_summary(fun.data = mean_se,
-               geom = "pointrange", size = 1, 
-               position = position_dodge(width = 0.5)) + 
-  scale_color_brewer(palette = "Set1", name = "") +
-  labs(x = "Regularidad morfológica", y = 'Proporción de uso del pretérito', 
-       title = "Uso del pretérito según la regularidad morfológica") +
-  theme(axis.text = element_text(size = 16),
-        axis.title = element_text(size = 18, face = "bold"),
-        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
-```
-
-```{r, publish-morph-reg-graph, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
-(Preterit_by_Morph_Regularity)
-```
-
----
 # Resultados agregados "omnibus"
-
 ```{r, generate-omnibus-model}
 Aspect_Omnibus = glmer(
   ExpForm ~ Tarea + Token_Main_Std * Reg_Main * FofA_Std + AoA_ENG_Std +
@@ -405,7 +358,7 @@ Aspect_Comprehension = glmer(
 ```
 
 ```{r, plot-FCT-model}
-FCT_Plot <- plot_model(Aspect_Comprehension, show.values = TRUE, value.offset = .3, transform = NULL, vline.color = "red") +
+FCT_Plot <- plot_model(Aspect_Comprehension, show.values = TRUE, value.offset = .3, transform = NULL, vline.color = "black") +
   scale_x_discrete(labels = c("Frecuencia : regularidad : uso", "Regularidad : uso", "Frecuencia : uso", "Frecuencia : regularidad", "Edad de adquisición", "Frecuencia de uso", "Regularidad morfológica", "Frecuencia léxica")) + 
   scale_y_continuous(breaks = seq (-3, 3, 1),
                      limits = c(-3, 3)) +
@@ -417,38 +370,6 @@ FCT_Plot <- plot_model(Aspect_Comprehension, show.values = TRUE, value.offset = 
 
 ```{r, show-FCT-plot, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
 (FCT_Plot)
-```
-
----
-# Pretérito en producción por uso del español y edad
-```{r, preterit-FofA}
-Preterit_FofA <- Preterit_EPT_Aggregate %>%
-  ggplot(aes(x = FofA, y = Part_Avg, color = Grupo)) + 
-  geom_point() +
-  geom_smooth(method=lm) +
-  xlim(c(10,50)) +
-  ylim(c(0,1)) +
-  labs(x = "Autoevaluación de frecuencia de uso", y = "Proporción de pretérito con verbos de estado", title = "Pretérito por frecuencia de uso") +
-  theme(axis.text = element_text(size = 16),
-        axis.title = element_text(size = 18, face = "bold"),
-        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
-```
-
-```{r, preterit-AoA}
-Preterit_AoA <- Preterit_EPT_Aggregate %>%
-  ggplot(aes(x = AoA_ENG, y = Part_Avg, color = Grupo)) + 
-  geom_point() +
-  geom_smooth(method=lm) +
-  xlim(c(0,10)) +
-  ylim(c(0,1)) +
-  labs(x = "Edad al principio de adquisición de inglés", y = "Proporción de pretérito con verbos de estado", title = "Pretérito por edad de adquisición") +
-  theme(axis.text = element_text(size = 16),
-        axis.title = element_text(size = 18, face = "bold"),
-        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
-```
-
-```{r, paste-FofA-graphs, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
-(Preterit_FofA) + (Preterit_AoA)
 ```
 
 ---
@@ -524,9 +445,14 @@ Preterit_AoA <- Preterit_EPT_Aggregate %>%
 
 
 ---
+```{r, Zyzik-quote}
+knitr::include_graphics("./Diagrams/Zyzik Quote.png")
+```
+
+---
 # Referencias, parte 1
 
-.small[Andersen, R. (1991). Developmental sequences: The emergence of aspect marking in second language acquisition. In T. Huebner & C. A. Ferguson (Eds.), *Crosscurrents in second language acquisition and linguistic theories* (pp. 305-324). Amsterdam: John Benjamins.]
+Andersen, R. (1991). Developmental sequences: The emergence of aspect marking in second language acquisition. In T. Huebner & C. A. Ferguson (Eds.), *Crosscurrents in second language acquisition and linguistic theories* (pp. 305-324). Amsterdam: John Benjamins.
 
 Davies, M. (2006). *A frequency dictionary of Spanish: Core vocabulary for learners.* New York, NY: Routledge.
 
@@ -553,3 +479,77 @@ Putnam, M., Perez-Cortes, S. & Sánchez, L. (2019). Feature reassembly hypothesi
 Putnam, M. & Sánchez, L. (2013). What’s so incomplete about incomplete acquisition? A prolegomenon to modeling heritage language grammars. *Linguistic Approaches to Bilingualism*, *3*(4), 478-508.
 
 Vendler, Z. (1967). *Linguistics in philosophy*. Ithaca, NY: Cornell University Press.
+
+Zyzik, E. (2019). Critical commentary: Incomplete acquisition from a usage-based perspective: A response to Domínguez, Hicks, and Slabakova. *Studies in Second Language Acquisition*, *41*, 279-282. doi:10.1017/S0272263119000330.
+
+---
+# Apéndice A: Uso del pretérito por verbo
+```{r, preterit-by-lexical-item, fig.retina = 2}
+Preterit_by_Lexical_Item <- Preterit_Aggregate %>%
+  ggplot(aes(x = MainVerb, y = ExpForm, color = Grupo, shape = Tarea)) + 
+  geom_hline(yintercept = 0.8, color = "white", size = 2) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", size = 1, 
+               position = position_dodge(width = 0.5)) + 
+  scale_color_brewer(palette = "Set1", name = "") +
+  scale_y_continuous(breaks = seq (0, 1, 0.2),
+                     limits = c(0, 1)) +
+  scale_x_discrete(labels = c("estar", "tener", "haber", "vivir", "gustar", "creer", "faltar", "amar", "doler", "excluir")) +
+  labs(x = "Verbo de estado", y = "Proporción de uso del pretérito", 
+       title = "Promedio de uso del pretérito por verbo de estado") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, publish-pret-LI-graph, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(Preterit_by_Lexical_Item)
+```
+
+
+---
+# Apéndice B: Pretérito por uso y edad (producción)
+```{r, preterit-FofA}
+Preterit_FofA <- Preterit_EPT_Aggregate %>%
+  ggplot(aes(x = FofA, y = Part_Avg, color = Grupo)) + 
+  geom_point() +
+  geom_smooth(method=lm) +
+  xlim(c(10,50)) +
+  ylim(c(0,1)) +
+  labs(x = "Autoevaluación de frecuencia de uso", y = "Proporción de pretérito con verbos de estado", title = "Pretérito por frecuencia de uso") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, preterit-AoA}
+Preterit_AoA <- Preterit_EPT_Aggregate %>%
+  ggplot(aes(x = AoA_ENG, y = Part_Avg, color = Grupo)) + 
+  geom_point() +
+  geom_smooth(method=lm) +
+  xlim(c(0,10)) +
+  ylim(c(0,1)) +
+  labs(x = "Edad al principio de adquisición de inglés", y = "Proporción de pretérito con verbos de estado", title = "Pretérito por edad de adquisición") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, paste-FofA-graphs, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(Preterit_FofA) + (Preterit_AoA)
+```
+
+---
+# Apéndice C: Código de gráficos para Juanjo
+```{r, show-code-for-Juanjo, echo = TRUE, include = TRUE, warn = TRUE}
+EPT_Plot <- plot_model(Aspect_Production, show.values = TRUE, value.offset = .3, transform = NULL, vline.color = "black") +
+  scale_x_discrete(labels = c("Frecuencia : regularidad : uso", "Regularidad : uso", "Frecuencia : uso", "Frecuencia : regularidad", "Edad de adquisición", "Frecuencia de uso", "Regularidad morfológica", "Frecuencia léxica")) + 
+  scale_y_continuous(breaks = seq (-3, 3, 1),
+                     limits = c(-3, 3)) +
+  labs(title = "Tarea receptiva", y = "Estimaciones β") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+This feature requires the packages `sjPlot` for the graph and `patchwork` for manipulating the images in Xaringan.

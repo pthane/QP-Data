@@ -41,6 +41,8 @@ Subjunctive_FCT_Aggregate = aggregate(Subjunctive_FCT$ExpLI, list(Subjunctive_FC
 Subjunctive_FCT_Aggregate = Subjunctive_FCT_Aggregate %>% rename(Part_Avg = x)
 Subjunctive_FCT_Aggregate = left_join(Subjunctive_FCT, Subjunctive_FCT_Aggregate, by = c("Participant_ID" = "Group.1"))
 
+Heritage_Subjunctive_Aggregate = rbind(Heritage_EPT_Standardized, Heritage_FCT_Standardized)
+
 
 # Plots
 ## Individual matrix items
@@ -121,22 +123,14 @@ Subjunctive_FCT_Aggregate %>%
 
 
 ## By age of acquisition
-Heritage_EPT_Standardized %>%
-  ggplot(aes(x = AoA_ENG, y = Part_Avg)) + 
+Heritage_Subjunctive_Aggregate %>%
+  ggplot(aes(x = AoA_ENG, y = Part_Avg, color = Task)) + 
   geom_point() +
   geom_smooth(method = lm) +
-  xlim(c(0,8)) +
-  ylim(c(0,1)) +
-  labs(x = "Age of acquisition of English", y = "Proportion of subjunctive responses", caption = "", 
-       title = "Subjunctive by Age of Acquisition, EMPT") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-Heritage_FCT_Standardized %>%
-  ggplot(aes(x = AoA_ENG, y = Part_Avg)) + 
-  geom_point() +
-  geom_smooth(method = lm) +
-  xlim(c(0,8)) +
-  ylim(c(0,1)) +
-  labs(x = "Age of acquisition of English", y = "Proportion of subjunctive responses", caption = "", 
+  scale_x_continuous(breaks = seq (0, 7, 1),
+                     limits = c(0, 7)) +
+  scale_y_continuous(breaks = seq (0, 1, 0.2),
+                     limits = c(0, 1)) +
+  labs(x = "Age of onset of acquisition of English", y = "Proportion of subjunctive responses", caption = "", 
        title = "Subjunctive by Age of Acquisition, MPST") +
   theme(plot.title = element_text(hjust = 0.5))

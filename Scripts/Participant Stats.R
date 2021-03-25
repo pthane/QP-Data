@@ -5,9 +5,9 @@ library(glmmTMB)
 library(emmeans)
 
 # Preparation of data
-Heritage_Participant_Data = read_csv("./CSV Files/Heritage/EPT Subjunctive Standardized Heritage Data.csv")
-L2_Participant_Data = read_csv("./CSV Files/L2 Learners/EPT Subjunctive Standardized L2 Data.csv")
-Comparison_Participant_Data = read_csv("./CSV Files/Comparison/EPT Subjunctive Standardized Comparison Data.csv")
+Heritage_Participant_Data = read_csv("./CSV Files/Heritage/Heritage EPT Preterit Data.csv")
+L2_Participant_Data = read_csv("./CSV Files/L2 Learners/L2 Learners EPT Preterit Data.csv")
+Comparison_Participant_Data = read_csv("./CSV Files/Comparison/Comparison EPT Preterit Data.csv")
 
 Participant_Data = rbind(Heritage_Participant_Data, L2_Participant_Data, Comparison_Participant_Data)
 
@@ -18,8 +18,10 @@ Heritage_Participant_Data %>%
   geom_point() +
   geom_smooth(method = lm) +
   labs(x = 'Proficiency score (DELE)', y = 'Self-reported frequency of use', caption = '', 
-       title = 'Proficiency and Patterns of Language Use')
+       title = 'Proficiency and Patterns of Language Use', color = "Age of acq.")
 
+Heritage_Proficiency_FofU_Correlation <- lm(FofA_Std ~ DELE_Std, data = Heritage_Participant_Data)
+summary(Heritage_Proficiency_FofU_Correlation)
 
 # Participant statistics
 ## Age

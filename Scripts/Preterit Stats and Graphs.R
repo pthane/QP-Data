@@ -42,6 +42,7 @@ Preterit_FCT_Aggregate = aggregate(Preterit_FCT$ExpLI, list(Preterit_FCT$Partici
 Preterit_FCT_Aggregate = Preterit_FCT_Aggregate %>% rename(Part_Avg = x)
 Preterit_FCT_Aggregate = left_join(Preterit_FCT, Preterit_FCT_Aggregate, by = c("Participant_ID" = "Group.1"))
 
+Heritage_Preterit_Aggregate = rbind(Heritage_EPT_Modified, Heritage_FCT_Modified)
 
 # Plots
 ## Individual lexical items
@@ -64,15 +65,15 @@ Preterit_Aggregate %>%
 Preterit_Aggregate %>%
   ggplot(aes(x = Reg_Main, y = ExpLI, color = ExpGroup, shape = Task)) + 
   facet_grid(cols = vars(ExpGroup)) +
-  geom_hline(yintercept = 0.8, color = 'white', size = 2) + 
+  geom_hline(yintercept = 0.8, color = "white", size = 2) + 
   stat_summary(fun.data = mean_se,
-               geom = 'pointrange', size = 1, 
+               geom = "pointrange", size = 1, 
                position = position_dodge(width = 0.5)) + 
   scale_color_brewer(palette = "Set1", name = "") +
   scale_y_continuous(breaks = seq (0, 1, 0.2),
                      limits = c(0, 1)) +
   labs(x = "Morphological regularity", y = "Proportion of preterit responses", color = "Group", 
-       title = 'Morphological Regularity and Preterit Use') +
+       title = "Morphological Regularity and Preterit Use") +
   theme(plot.title = element_text(hjust = 0.5))
 
 
@@ -83,8 +84,8 @@ Preterit_EPT_Aggregate %>%
   geom_smooth(method=lm) +
   xlim(c(25,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Correct responses on DELE proficiency measure', y = 'Proportion of preterit responses', caption = '', 
-       title = 'Preterit by Proficiency, EAPT') +
+  labs(x = "Correct responses on DELE proficiency measure", y = "Proportion of preterit responses", caption = "", 
+       title = "Preterit by Proficiency, EAPT", color = "Group") +
   theme(plot.title = element_text(hjust = 0.5))
 
 Preterit_FCT_Aggregate %>%
@@ -93,8 +94,8 @@ Preterit_FCT_Aggregate %>%
   geom_smooth(method=lm) +
   xlim(c(25,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Correct responses on DELE proficiency measure', y = 'Proportion of preterit responses', caption = '', 
-       title = 'Preterit by Proficiency, ASPT') +
+  labs(x = "Correct responses on DELE proficiency measure", y = "Proportion of preterit responses", caption = "", 
+       title = "Preterit by Proficiency, ASPT", color = "Group") +
   theme(plot.title = element_text(hjust = 0.5))
 
 
@@ -105,8 +106,8 @@ Preterit_EPT_Aggregate %>%
   geom_smooth(method=lm) +
   xlim(c(5,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Self-reported frequency of use of Spanish', y = 'Proportion of preterit responses',
-       title = 'Preterit by Frequency of Use, EAPT') +
+  labs(x = "Self-reported frequency of use of Spanish", y = "Proportion of preterit responses",
+       title = "Preterit by Frequency of Use, EAPT") +
   theme(plot.title = element_text(hjust = 0.5))
 
 Preterit_FCT_Aggregate %>%
@@ -115,29 +116,20 @@ Preterit_FCT_Aggregate %>%
   geom_smooth(method=lm) +
   xlim(c(5,50)) +
   ylim(c(0,1)) +
-  labs(x = 'Self-reported frequency of use of Spanish', y = 'Proportion of preterit responses',
-       title = 'Preterit by Frequency of Use, ASPT') +
+  labs(x = "Self-reported frequency of use of Spanish", y = "Proportion of preterit responses",
+       title = "Preterit by Frequency of Use, ASPT") +
   theme(plot.title = element_text(hjust = 0.5))
 
 # By age of acquisition of English
-Heritage_EPT_Modified %>%
-  ggplot(aes(x = AoA_ENG, y = Part_Avg)) + 
+Heritage_Preterit_Aggregate %>%
+  ggplot(aes(x = AoA_ENG, y = Part_Avg, color = Task)) + 
   geom_point() +
   geom_smooth(method = lm) +
   xlim(c(0,8)) +
+  scale_x_continuous(breaks = seq(0, 7, 1),
+                     limits = c(0, 7)) +
   scale_y_continuous(breaks = seq (0, 1, 0.2),
                      limits = c(0, 1)) +
-  labs(x = 'Age of onset of acquisition of English', y = 'Proportion of subjunctive responses', caption = '', 
-       title = 'Preterit by Age of Acquisition of English, EAPT') +
-  theme(plot.title = element_text(hjust = 0.5))
-
-Heritage_FCT_Modified %>%
-  ggplot(aes(x = AoA_ENG, y = Part_Avg)) + 
-  geom_point() +
-  geom_smooth(method = lm) +
-  xlim(c(0,8)) +
-  scale_y_continuous(breaks = seq (0, 1, 0.2),
-                     limits = c(0, 1)) +
-  labs(x = 'Age of onset of acquisition of English', y = 'Proportion of subjunctive responses', caption = '', 
-       title = 'Preterit by Age of Acquisition of English, APST') +
+  labs(x = "Age of onset of acquisition of English", y = "Proportion of subjunctive responses", caption = "", 
+       title = "Preterit by Age of Acquisition of English, EAPT") +
   theme(plot.title = element_text(hjust = 0.5))

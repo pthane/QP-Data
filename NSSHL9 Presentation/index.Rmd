@@ -1,0 +1,545 @@
+---
+title: "On the Methodological Validity of Self-Reported Lexical Ratings in Research on Spanish as a Heritage Language"
+subtitle : "Patrick D. Thane<br>Rutgers University"
+author: "9th National Symposium of Spanish as a Heritage Language"
+institute: "Florida State University"
+date: "February 25, 2022"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["rutgers", "rutgers-fonts"]
+    nature:
+      beforeInit: "http://www.jvcasillas.com/ru_xaringan/js/ru_xaringan.js"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+---
+
+```{r setup, echo = FALSE, include = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+options(scipen = 999)
+
+library(tidyverse)
+library(base)
+library(lme4)
+library(knitr)
+library(kableExtra)
+library(xaringan)
+library(patchwork)
+library(jtools)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+```
+
+```{r, load-datasets}
+Lexical_Item_Report <- read.csv("../CSV Files/Lexical Analysis Master.csv") %>% 
+  na.omit %>% 
+  mutate(Davies_Std = (Davies_Rating - mean(Davies_Rating))/sd(Davies_Rating),
+         CORPES_Std = (CORPES_Rating - mean(CORPES_Rating))/sd(CORPES_Rating),
+         WordList_Std = (WordList_Rating - mean(WordList_Rating))/sd(WordList_Rating),
+         SRLF_Std = (Part_Rating - mean(Part_Rating))/sd(Part_Rating),
+         FofU = (FofU_Prod + FofU_Comp),
+         FofU_Std = (FofU - mean(FofU))/sd(FofU),
+         DELE_Std = (DELE - mean(DELE))/sd(DELE),
+         AoA_ENG_Std = (AoA_ENG - mean(AoA_ENG))/sd(AoA_ENG))
+
+Verb_List <- read.csv("../CSV Files/Lexical Item Analysis/Full Verb List.csv")
+```
+
+```{r, generate-LI-averages}
+Average_by_LI <- aggregate(Lexical_Item_Report$Part_Rating, list(Lexical_Item_Report$Verb), FUN = mean)
+Average_by_LI <- Average_by_LI %>% rename(Verb = Group.1)
+Average_by_LI <- Average_by_LI %>% rename(SRLF_Avg = x)
+Average_by_LI <- left_join(Lexical_Item_Report, Average_by_LI, by = c("Verb" = "Verb"))
+
+Average_by_LI <- Average_by_LI %>% 
+  mutate(SRLF_Avg_Std = (SRLF_Avg - mean(SRLF_Avg))/sd(SRLF_Avg))
+```
+
+```{r, generate-participant-averages}
+Average_by_Participant <- aggregate(Lexical_Item_Report$Part_Rating, list(Lexical_Item_Report$Participant_ID), FUN = mean)
+Average_by_Participant <- Average_by_Participant %>% rename(Participant_ID = Group.1)
+Average_by_Participant <- Average_by_Participant %>% rename(Part_Avg = x)
+Average_by_Participant <- left_join(Lexical_Item_Report, Average_by_Participant, by = c("Participant_ID" = "Participant_ID"))
+
+Average_by_Participant <- Average_by_Participant %>%
+  mutate(Part_Avg_Std = (Part_Avg - mean(Part_Avg))/sd(Part_Avg))
+```
+
+
+```{r, generate-participant-sum}
+Sum_by_Participant <- aggregate(Lexical_Item_Report$Part_Rating, list(Lexical_Item_Report$Participant_ID), FUN = sum)
+Sum_by_Participant <- Sum_by_Participant %>% rename(Participant_ID = Group.1)
+Sum_by_Participant <- Sum_by_Participant %>% rename(Part_Sum = x)
+Sum_by_Participant <- left_join(Lexical_Item_Report, Sum_by_Participant, by = c("Participant_ID" = "Participant_ID"))
+
+Sum_by_Participant <- Sum_by_Participant %>%
+  mutate(Part_Sum_Std = (Part_Sum - mean(Part_Sum))/sd(Part_Sum))
+```
+
+# Join the Conversation!
+
+```{r, QR-code, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+Padlet_QR <- knitr::include_graphics("./Padlet QR Code.png")
+Presentation_QR <- knitr::include_graphics("./GitHub QR Code.png")
+```
+
+```{r, print-QR-codes}
+(Padlet_QR)/(Presentation_QR)
+```
+
+---
+# Lexical Frequency in Spanish as HL
+
+
+- Lexical frequency: “how often a particular form appears in the input” Ellis (2013, p. 93)
+
+
+--
+- Importance of lexical frequency in Spanish as a heritage language
+
+  + Gender morphology (Hur, Lopez-Otero, & Sánchez 2020)
+  + Subjunctive mood (Giancaspro, 2020)
+  + Differential object marking (Hur, 2020)
+  + Imperative morphology (Lopez-Otero, 2020)
+
+
+--
+- Two methods for measuring lexical frequency
+
+  + *Speaker-external:* Use of language corpora (e.g., Davies, 2016)
+  + *Speaker-internal:* Use of participant self-ratings
+
+
+--
+- Do the ways that we operationalize frequency correlate with one another?
+
+
+--
+- Does lexical frequency correlate with overall patterns of use?
+
+
+---
+# Impact of Frequency of Use
+
+
+- Activation Hypothesis (Putnam & Sánchez, 2013): frequency of use of the HL modulates reassembly of features (especially lower-frequency lexical items)
+
+
+--
+- How do we operationalize frequency of use?
+  + Questionnaires (e.g., Cuza & Pérez-Tattam, 2013; Perez-Cortes, 2020)
+  + Lexical ratings as a proxy (e.g., Hur et al., 2020)
+  + Morphosyntactic proficiency (e.g., Giancaspro & Sánchez, 2021)
+
+
+--
+- What is the empirical relationship between these factors?
+
+
+---
+# Research Questions and Hypotheses
+
+**1. Does frequency of use correlate with HS' lexical ratings and proficiency?**
+
+
+--
+  + Predicted correlation between lexical ratings and frequency of use of Spanish
+  + Predicted correlation between proficiency and frequency of use of Spanish
+
+
+--
+**2. Do HS' self-ratings correlate with the distribution of lemma frequencies in language corpora?**
+
+
+--
+  + Predicted correlation between participants' self-ratings and Corpus del español (Davies, 2016)
+  + Predicted correlation between participants' self-ratings and esTenTen18 (Sketch Engine, 2018)
+
+
+--
+**3. Do multiple corpora provide similar ratings of lexical frequency?**
+
+
+--
+  + Predicted relationship between Corpus del español (Davies, 2016) and esTenTen18 (Sketch Engine, 2018)
+
+---
+# Methods
+
+
+All tasks were completed by 54 heritage speakers of Spanish
+
+--
+- Frequency of use questionnaire
+
+  + Use of Spanish across 5 contexts (for work or school, with friends, with colleagues, with family members, other contexts)
+  + Separate scales for comprehension and production
+  + Total of 50-point frequency of use score
+
+
+--
+- Self-reported lexical frequency task (Hur et al., 2020)
+  + 30 verbs of differing lemma frequencies (1,620 verbs rated)
+  + Lemmas extracted from Davies (2006) and corroborated with Sketch Engine (2018)
+  + 0-9 Likert scales
+  + Translations required
+
+
+--
+- DELE proficiency measure (Montrul & Slabakova, 2003)
+  + 50 multiple choice questions
+  + Lexical and morphosyntactic proficiency
+
+
+---
+# About the Corpora
+
+
+- Davies (2016) *Corpus del español*
+  + 2,000,000,000 tokens
+  + Use of language on the web from 21 countries
+  + Data collected in 2013 and 2014
+
+
+--
+- Sketch Engine (2018) *Spanish Web 2018 (esTenTen18)*
+  + 16,900,000,000 tokens from written language
+  + 50% from Spain, 50% from Americas
+  + Websites in both regions, entire Spanish Wikipedia
+
+
+---
+# Verbs Selected
+
+- 30 verbs (regular and irregular)
+- Part of broader project on aspect and mood morphology
+
+
+--
+```{r, lexical-frequency}
+kable(Verb_List[1:8], col.names = c("Verb", "Davies", "esTenTen18", "SRLF", "Verb", "Davies", "esTenTen18", "SRLF"), align = "llllllllll")
+```
+
+
+---
+# RQ1: Analysis
+
+
+**Does frequency of use correlate with HS' lexical ratings and proficiency?**
+
+
+--
+- Linear mixed effects model: `Frequency of use ~ Sum of lexical ratings * DELE + (1 | Verb)`
+
+
+--
+- Dependent variable: frequency of use of Spanish (sum of Likert scales)
+
+
+--
+- Independent variables
+  + Sum of lexical ratings by participant (0-9)
+  + Proficiency (DELE score, 0-50)
+  + Average lexical rating : proficiency interaction
+
+
+--
+- Random effect of verb
+
+
+--
+- All variables standardized for analysis
+
+
+---
+# RQ1: Results
+
+```{r, run-frequency-GLMM}
+Frequency_Model <- lmer(
+  FofU_Std ~ Part_Sum_Std * DELE_Std +
+    (1 | Verb),
+  data = Sum_by_Participant)
+
+```
+
+```{r, plot-frequency-GLMM}
+Frequency_Model_Graph <- plot_model(Frequency_Model, show.values = TRUE, show.intercept = TRUE, value.offset = .3, transform = NULL, vline.color = "black") +
+    scale_x_discrete(labels = c("Rating : Proficiency interaction", "Proficiency", "Sum of participant ratings", "Intercept")) +
+  labs(title = "Participant Ratings and Frequency of Use", y = "β Estimates") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, print-frequency-model, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(Frequency_Model_Graph)
+```
+
+---
+# Correlations with Frequency of Use
+
+```{r, FofU-correlations}
+Lexical_FofU_Graph <- Sum_by_Participant %>% 
+  ggplot(., aes(x = FofU, y = Part_Sum)) + 
+  geom_point() + 
+  geom_smooth(method = lm) +
+  scale_x_continuous(breaks = seq(10, 45, 5),
+                     limits = c(10, 45)) +
+  scale_y_continuous(breaks = seq(0, 270, 30),
+                     limits = c(0, 270)) +
+  labs(x = "Self-reported frequency of use of Spanish", y = "Sum of participant ratings across verbs", title = "Frequency of Use and Lexical Ratings") +
+    theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+
+DELE_FofU <- Lexical_Item_Report %>%
+  ggplot(., aes(x = FofU, y = DELE)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  scale_x_continuous(breaks = seq(0, 45, 5),
+                     limits = c(10, 45)) +
+  scale_y_continuous(breaks = seq(25, 50, 5),
+                     limits = c(25, 50)) +
+  labs(x = "Self-reported frequency of use of Spanish", y = "Score on DELE", title = "Frequency of Use and Proficiency") +
+    theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+  
+```
+
+```{r, print-activation-graph, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(DELE_FofU)+(Lexical_FofU_Graph)
+```
+
+---
+# RQ2: Analysis
+
+
+**Do HS' self-reported lexical frequency ratings correlate with token frequencies in language corpora?**
+
+
+--
+- Two linear models, one for each corpus
+
+  + Davies model: `Davies lemmas ~ average by verb`
+  + Sketch Engine model: `Sketch Engine lemmas ~ average by verb`
+
+--
+
+- Dependent variables: Davies (2016) lemma frequencies and Sketch Engine (2018) lemma frequencies
+
+
+--
+- Independent variable: Average of participant ratings by verb
+
+---
+# RQ2: Results
+
+```{r, run-corpora-correlations}
+Davies_SRLF_Correlation <- lm(Davies_Std ~ SRLF_Avg_Std, data = Average_by_LI)
+WordList_SRLF_Correlation <- lm(WordList_Std ~ SRLF_Avg_Std, data = Average_by_LI)
+
+
+Davies_SRLF_Table <- broom::tidy(Davies_SRLF_Correlation)
+WordList_SRLF_Table <- summary(WordList_SRLF_Correlation)
+```
+
+
+SRLF: **s**elf-**r**eported **l**exical **f**requency
+
+
+```{r, generate-corpora-plots}
+Davies_Graph <- plot_model(Davies_SRLF_Correlation, show.values = TRUE, show.intercept = TRUE, value.offset = .3, transform = NULL, vline.color = "black") +
+    scale_x_discrete(labels = c("SRLF", "Intercept")) +
+  labs(title = "Corpus del español and self-ratings", y = "β Estimates") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+
+WordList_Graph <- plot_model(WordList_SRLF_Correlation, show.values = TRUE, show.intercept = TRUE, value.offset = .3, transform = NULL, vline.color = "black") +
+    scale_x_discrete(labels = c("SRLF", "Intercept")) +
+  labs(title = "esTenTen18 and self-ratings", y = "β Estimates") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, print-frequency-correlations, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(Davies_Graph)+(WordList_Graph)
+```
+
+---
+# Correlations Between Frequency Measures
+```{r, average-by-LI-graph}
+Davies_SRLF_Graph <- Average_by_LI %>% 
+  ggplot(., aes(x = log(Davies_Rating), y = SRLF_Avg)) + 
+  geom_point() + 
+  geom_smooth(method = lm) +
+  scale_y_continuous(breaks = seq (0, 9, 2),
+                     limits = c(0, 9)) +
+  labs(x = "Log-transformed lemma frequency in Corpus del español", y = "Average of verb ratings across participants", title = "Corpus del español and Self Ratings") +
+    theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+
+WordList_SRLF_Graph <- Average_by_LI %>% 
+  ggplot(., aes(x = log(WordList_Rating), y = SRLF_Avg)) + 
+  geom_point() + 
+  geom_smooth(method = lm) +
+  scale_y_continuous(breaks = seq (0, 9, 2),
+                     limits = c(0, 9)) +
+  labs(x = "Log-transformed lemma frequency in esTenTen18", y = "Average of verb ratings across participants", title = "esTenTen18 and Self Ratings") +
+    theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, print-comparison-graphs, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(Davies_SRLF_Graph)+(WordList_SRLF_Graph)
+```
+
+
+---
+# RQ3: Analysis
+
+**3. Do multiple corpora provide similar ratings of lexical frequency?**
+
+
+--
+- Linear model: `Davies lemmas ~ esTenTen18 lemmas`
+
+
+--
+- Dependent variable: Davies (2016) corpus
+
+
+--
+- Independent variable: Sketch Engine (2018) lemmas
+
+
+---
+# RQ3: Results
+
+```{r, generate-corpora-correlation-model}
+Corpora_Correlation_Model <- lm(Davies_Std ~ WordList_Std, data = Lexical_Item_Report)
+```
+
+```{r, generate-corpora-correlation-plot}
+Corpora_Graph <- plot_model(Corpora_Correlation_Model, show.values = TRUE, show.intercept = TRUE, value.offset = .3, transform = NULL, vline.color = "black") +
+    scale_x_discrete(labels = c("esTenTen18", "Intercept")) +
+  labs(title = "Corpus del español and esTenTen18 Correlation", y = "β Estimates") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, print-corpora-forest-plot, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(Corpora_Graph)
+```
+
+---
+# Correlation between Corpora
+
+```{r, graph-corpora-correlation}
+Corpora_Correlation <- Lexical_Item_Report %>% 
+  ggplot(., aes(x = log(Davies_Rating), y = log(WordList_Rating))) + 
+  geom_point() + 
+  geom_smooth(method = lm) +
+  labs(x = "Log-transformed lemmas in Corpus del español", y = "Log-transformed lemmas in esTenTen18", title = "Correlation between Corpora") +
+    theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18, face = "bold"),
+        plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
+```
+
+```{r, print-corpora-correlation, height = 10, fig.width = 16, fig.align = 'center', fig.retina = 2}
+(Corpora_Correlation)
+```
+
+
+---
+# Revisiting Research Questions
+
+**1. Does frequency of use correlate with HS' lexical ratings and proficiency?**
+
+
+  + Average of self-ratings: slight correlation
+  + Proficiency: slight correlation
+
+
+--
+**2. Do HS' self-reported lexical frequency ratings correlate with token frequencies in language corpora?**
+
+
+  + Davies (2016): yes
+  + Sketch Engine (2018): yes
+  
+  
+--
+**3. Do multiple corpora provide similar ratings of lexical frequency?**
+
+
+  + Yes: correlation found between Corpus del español (Davies, 2016) and esTenTen18 (Sketch Engine, 2018)
+
+---
+# Implications for Heritage Language Theory
+
+
+- Consistency across existing studies regarding lexical frequency
+
+  + Davies (2016)
+  + Sketch Engine (2018)
+  + Self-reported lexical frequency
+  + There are consistencies across studies with different methods, solidifying the importance of lexical frequency in Spanish HS
+
+
+--
+- Lexical frequency may not be a precise proxy to frequency of use (lexical activation ≠ overall patterns of use)
+
+
+--
+- Proficiency generally reflects patterns of activation, but there is considerable variability across patterns of use and proficiency
+
+
+---
+# Future Directions
+
+- Need to investigate the strength of correlations in nominal domain
+
+
+--
+- Necessary to evaluate these relationships using data in individual studies
+
+
+--
+- Need to utilize additional corpora in analysis
+
+
+---
+# References
+
+Cuza, A., & Pérez-Tattam, R. (2016). Grammatical gender selection and phrasal word order in child heritage Spanish: A feature re-assembly approach. *Bilingualism: Language and Cognition*, *19*(1), 50–68. https://doi.org/10.1017/S1366728914000893
+
+Davies, M. (2016). Corpus del español. http://www.corpusdelespanol.org/web-dial/
+
+Ellis, N. (2013). Frequency-based grammar and the acquisition of tense and aspect in L2 learning. In M. R. Salaberry & L. Comajoan (Eds.), *Research design and methodology in studies on L2 tense and aspect* (pp. 89-117). Berlin: de Gruyter.
+
+Giancaspro, D. (2020). Not in the mood: Frequency effects in heritage speakers’ subjunctive knowledge. In B. Brehmer & J. Treffers-Daller (Eds.), *Studies in Bilingualism* (Vol. 59, pp. 72–97). John Benjamins. https://doi.org/10.1075/sibil.59.03gia
+
+Giancaspro, D., & Sánchez, L. (2021). Me, mi, my: Innovation and variability in heritage speakers’ knowledge of inalienable possession. *Glossa: A Journal of General Linguistics*, *6*(1). https://doi.org/10.5334/gjgl.1240
+
+Hur, E. (2020). Verbal lexical frequency and DOM in heritage speakers of Spanish. In A. Mardale & S. Montrul (Eds.), *Trends in Language Acquisition Research* (Vol. 26, pp. 207–235). John Benjamins. https://doi.org/10.1075/tilar.26.hur08
+
+
+---
+# References
+
+Hur, E., López Otero, J. C., & Sánchez, L. (2020). Gender agreement and assignment in Spanish heritage Speakers: Does frequency matter? *Languages*, *5*(4), 48. https://doi.org/10.3390/languages5040048
+
+Montrul, S., & Slabakova, R. (2003). Competence similarities between native and near-native Speakers: An investigation of the preterite-imperfect contrast in Spanish. *Studies in Second Language Acquisition*, *25*(3), 351–398. https://doi.org/10.1017/S0272263103000159
+
+Putnam, M. T., & Sánchez, L. (2013). What’s so incomplete about incomplete acquisition?: A prolegomenon to modeling heritage language grammars. *Linguistic Approaches to Bilingualism*, *3*(4), 478–508. https://doi.org/10.1075/lab.3.4.04put
+
+Sketch Engine. (2018). Spanish Web 2018 (esTenTen18). https://app.sketchengine.eu/#dashboard?corpname=preloaded%2Festenten18_fl5_1
